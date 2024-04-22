@@ -1,9 +1,8 @@
-package lexer_test
+package lexer
 
 import (
 	"testing"
 
-	"github.com/samallen659/ccJSONParser/internal/lexer"
 	"github.com/samallen659/ccJSONParser/internal/token"
 )
 
@@ -22,7 +21,7 @@ func TestLexer(t *testing.T) {
 		{token.EOF, "EOF"},
 	}
 
-	l := lexer.New(input)
+	l := New(input)
 
 	for _, tt := range tests {
 		tok := l.NextToken()
@@ -43,4 +42,22 @@ func TestLexer(t *testing.T) {
 			)
 		}
 	}
+}
+
+func TestIsLetter(t *testing.T) {
+	t.Run("lower case letter", func(t *testing.T) {
+		if !isLetter('b') {
+			t.Fatal("isLetter returned false for b. Expected=true")
+		}
+	})
+	t.Run("upper case letter", func(t *testing.T) {
+		if !isLetter('N') {
+			t.Fatal("isLetter returned false for N. Expected=true")
+		}
+	})
+	t.Run("int", func(t *testing.T) {
+		if isLetter(10) {
+			t.Fatal("isLetter return true for 10. Expected=false")
+		}
+	})
 }
