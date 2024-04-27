@@ -50,6 +50,19 @@ func (l *Lexer) NextToken() token.Token {
 	default:
 		if isDigit(l.ch) {
 			tok = newToken(token.INT, l.readNumber())
+		} else if isLetter(l.ch) {
+			keyword := l.readKeyword()
+			tokenType := token.LookupKeywords(keyword)
+			switch tokenType {
+			case token.TRUE:
+				tok = token.Token{Type: tokenType, Literal: "true"}
+			case token.FALSE:
+				tok = token.Token{Type: tokenType, Literal: "false"}
+			case token.NULL:
+				tok = token.Token{Type: tokenType, Literal: "null"}
+			case token.ILLEGAL:
+				tok = token.Token{Type: token.ILLEGAL, Literal: "ILLEGAL"}
+			}
 		} else {
 			tok = token.Token{Type: token.ILLEGAL, Literal: "ILLEGAL"}
 		}
@@ -106,6 +119,20 @@ func (l *Lexer) readNumber() []byte {
 	}
 
 	return out.Bytes()
+}
+
+func (l *Lexer) readKeyword() string {
+	var out bytes.Buffer
+
+	for isLetter(l.ch) {
+		out.WriteByte(l.ch)
+		if !isLetter(l.peekChar()) {
+			break
+		}
+		l.readChar()
+	}
+
+	return out.String()
 }
 
 func newToken(tokenType token.TokenType, ch []byte) token.Token {

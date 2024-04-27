@@ -18,7 +18,10 @@ func TestLexer(t *testing.T) {
             2,
             3,
             4
-    ]
+        ],
+        "five": true,
+        "six": false,
+        "seven": null
     }`
 
 	tests := []struct {
@@ -49,6 +52,18 @@ func TestLexer(t *testing.T) {
 		{token.COMMA, ","},
 		{token.INT, "4"},
 		{token.RBRACKET, "]"},
+		{token.COMMA, ","},
+		{token.STRING, "five"},
+		{token.COLON, ":"},
+		{token.TRUE, "true"},
+		{token.COMMA, ","},
+		{token.STRING, "six"},
+		{token.COLON, ":"},
+		{token.FALSE, "false"},
+		{token.COMMA, ","},
+		{token.STRING, "seven"},
+		{token.COLON, ":"},
+		{token.NULL, "null"},
 		{token.RBRACE, "}"},
 		{token.EOF, "EOF"},
 	}
