@@ -29,3 +29,8 @@ type Token struct {
 	Type    TokenType
 	Literal string
 }
+
+var keywords = map[string]TokenType{
+	"true":  TRUE,
+	"false": FALSE,
+}
