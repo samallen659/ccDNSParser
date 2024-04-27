@@ -21,6 +21,7 @@ const (
 
 	TRUE  = "true"
 	FALSE = "false"
+	NULL  = "null"
 
 	MINUS = "-"
 )
@@ -33,4 +34,13 @@ type Token struct {
 var keywords = map[string]TokenType{
 	"true":  TRUE,
 	"false": FALSE,
+	"null":  NULL,
+}
+
+func LookupKeywords(s string) TokenType {
+	if tokenType, ok := keywords[s]; ok {
+		return tokenType
+	} else {
+		return ILLEGAL
+	}
 }
