@@ -7,7 +7,19 @@ import (
 )
 
 func TestLexer(t *testing.T) {
-	input := `{"one":1}`
+	input := `
+     {
+        "one":1,
+        "two": {
+            "three": 3
+        },
+        "four": [
+            1,
+            2,
+            3,
+            4
+    ]
+    }`
 
 	tests := []struct {
 		expectedType    token.TokenType
@@ -17,18 +29,39 @@ func TestLexer(t *testing.T) {
 		{token.STRING, "one"},
 		{token.COLON, ":"},
 		{token.INT, "1"},
+		{token.COMMA, ","},
+		{token.STRING, "two"},
+		{token.COLON, ":"},
+		{token.LBRACE, "{"},
+		{token.STRING, "three"},
+		{token.COLON, ":"},
+		{token.INT, "3"},
+		{token.RBRACE, "}"},
+		{token.COMMA, ","},
+		{token.STRING, "four"},
+		{token.COLON, ":"},
+		{token.LBRACKET, "["},
+		{token.INT, "1"},
+		{token.COMMA, ","},
+		{token.INT, "2"},
+		{token.COMMA, ","},
+		{token.INT, "3"},
+		{token.COMMA, ","},
+		{token.INT, "4"},
+		{token.RBRACKET, "]"},
 		{token.RBRACE, "}"},
 		{token.EOF, "EOF"},
 	}
 
 	l := New(input)
 
-	for _, tt := range tests {
+	for i, tt := range tests {
 		tok := l.NextToken()
 
 		if tok.Type != tt.expectedType {
 			t.Fatalf(
-				"Unexpected tokenType returned. expected=%s got=%s",
+				"Test(%d): Unexpected tokenType returned. expected=%s got=%s",
+				i,
 				tt.expectedType,
 				tok.Type,
 			)
@@ -36,7 +69,8 @@ func TestLexer(t *testing.T) {
 
 		if tok.Literal != tt.expectedLiteral {
 			t.Fatalf(
-				"Unexpected Literal returned. expected=%s got=%s",
+				"Test(%d): Unexpected Literal returned. expected=%s got=%s",
+				i,
 				tt.expectedLiteral,
 				tok.Literal,
 			)
