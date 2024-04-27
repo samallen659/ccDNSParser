@@ -68,6 +68,14 @@ func (l *Lexer) readChar() {
 	l.readPosition++
 }
 
+func (l *Lexer) peekChar() byte {
+	if l.readPosition >= len(l.input) {
+		return 0
+	} else {
+		return l.input[l.readPosition]
+	}
+}
+
 func (l *Lexer) skipWhitespace() {
 	for l.ch == ' ' || l.ch == '\t' || l.ch == '\n' || l.ch == '\r' {
 		l.readChar()
@@ -77,7 +85,7 @@ func (l *Lexer) skipWhitespace() {
 func (l *Lexer) readString() []byte {
 	var out bytes.Buffer
 
-	for l.input[l.readPosition] != '"' {
+	for l.peekChar() != '"' {
 		l.readChar()
 		out.WriteByte(l.ch)
 	}
@@ -91,7 +99,7 @@ func (l *Lexer) readNumber() []byte {
 
 	for isDigit(l.ch) {
 		out.WriteByte(l.ch)
-		if !isDigit(l.input[l.readPosition]) {
+		if !isDigit(l.peekChar()) {
 			break
 		}
 		l.readChar()
